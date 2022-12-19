@@ -1,3 +1,3 @@
-class RecipeList {
+class RecipeDetail {
   // TODO: レスポンスをもとにモデル
 }
