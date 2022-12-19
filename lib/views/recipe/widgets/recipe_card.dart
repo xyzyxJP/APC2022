@@ -9,28 +9,35 @@ class RecipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10.0),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 5.0,
-              spreadRadius: 2.0,
-            )
-          ]),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10.0),
-        child: Material(
-          child: Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              PhotoView(
-                photoPaths: [recipe.squareVideo!.posterUrl!],
-              ),
-              _buildProfile(),
-            ],
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24.0),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 5.0,
+                spreadRadius: 2.0,
+              )
+            ]),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24.0),
+          child: Material(
+            child: Stack(
+              fit: StackFit.expand,
+              children: recipe.id != null
+                  ? <Widget>[
+                      PhotoView(
+                        photoPaths: [
+                          recipe.squareVideo!.posterUrl!,
+                          recipe.squareVideo!.posterUrl!
+                        ],
+                      ),
+                      _buildProfile(),
+                    ]
+                  : <Widget>[],
+            ),
           ),
         ),
       ),
@@ -63,6 +70,7 @@ class RecipeCard extends StatelessWidget {
                   Text(recipe.title!,
                       style:
                           const TextStyle(color: Colors.white, fontSize: 24.0)),
+                  const SizedBox(height: 8.0),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [

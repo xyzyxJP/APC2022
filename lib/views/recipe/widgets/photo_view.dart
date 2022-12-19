@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 class PhotoView extends StatefulWidget {
   final List<String> photoPaths;
-  int photoIndex = 0;
+  final int photoIndex = 0;
 
-  PhotoView({super.key, required this.photoPaths});
+  const PhotoView({super.key, required this.photoPaths});
 
   @override
   State<PhotoView> createState() => _PhotoViewState();
@@ -90,7 +90,6 @@ class _PhotoViewState extends State<PhotoView> {
     for (var photoPath in widget.photoPaths) {
       precacheImage(CachedNetworkImageProvider(photoPath), context);
     }
-
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[

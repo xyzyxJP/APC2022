@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class PhotoIndicator extends StatelessWidget {
-  int photoIndex;
-  int photoCount;
+  final int photoIndex;
+  final int photoCount;
 
-  PhotoIndicator(
+  const PhotoIndicator(
       {super.key, required this.photoIndex, required this.photoCount});
 
   Widget _buildInactiveIndicator() {
@@ -41,25 +41,16 @@ class PhotoIndicator extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildIndicators() {
+  @override
+  Widget build(BuildContext context) {
     final List<Widget> indicators = [];
-
     for (int i = 0; i < photoCount; i++) {
       indicators.add(i == photoIndex
           ? _buildActiveIndicator()
           : _buildInactiveIndicator());
     }
-
-    return indicators;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(0.0),
-      child: Row(
-        children: _buildIndicators(),
-      ),
+    return Row(
+      children: indicators,
     );
   }
 }

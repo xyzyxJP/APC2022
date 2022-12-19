@@ -1,45 +1,38 @@
+import 'package:apc2022/api/api.dart';
 import 'package:apc2022/models/recipe_list.dart';
-import 'package:apc2022/test/test_recipe_list.dart';
 import 'package:apc2022/views/recipe/widgets/recipe_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:swipe_cards/draggable_card.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 
 class RecipeListPage extends StatefulWidget {
-  const RecipeListPage({super.key});
+  final String categoryId;
+  final List<Data> recipeList;
+
+  const RecipeListPage(
+      {super.key, required this.categoryId, required this.recipeList});
 
   @override
   State<RecipeListPage> createState() => _RecipeListPageState();
 }
 
 class _RecipeListPageState extends State<RecipeListPage> {
-  final RecipeList _recipeList = testRecipeList;
+  int _pageIndex = 2;
 
-  List<SwipeItem> _swipeItems = [];
+  final List<SwipeItem> _swipeItems = [];
   late MatchEngine _matchEngine;
   final _scaffoldKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    for (int i = 0; i < _recipeList.data!.length; i++) {
+    _matchEngine = MatchEngine(swipeItems: _swipeItems);
+    for (int i = 0; i < widget.recipeList.length; i++) {
       _swipeItems.add(
         SwipeItem(
-          content: _recipeList.data![i],
-          likeAction: () {},
-          nopeAction: () {},
-          superlikeAction: () {},
-          onSlideUpdate: (SlideRegion? region) async {
-            print("Region $region");
-          },
+          content: widget.recipeList[i],
         ),
       );
     }
-
-    _matchEngine = MatchEngine(swipeItems: _swipeItems);
-    super.initState();
   }
 
   @override
@@ -47,28 +40,58 @@ class _RecipeListPageState extends State<RecipeListPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("Swipe Cards"),
+        title: const Text("Recipe List"),
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Container(
-              height: 550,
-              child: SwipeCards(
-                matchEngine: _matchEngine,
-                itemBuilder: (BuildContext context, int index) {
-                  return RecipeCard(recipe: _recipeList.data![index]);
-                },
-                onStackFinished: () {},
-                itemChanged: (SwipeItem item, int index) {
-                  print("item: ${item.content}, index: $index");
-                },
-                upSwipeAllowed: true,
-                fillSpace: true,
-              ),
+      body: Column(
+        children: [
+          SizedBox(
+            height: 600,
+            child: SwipeCards(
+              matchEngine: _matchEngine,
+              itemBuilder: (BuildContext context, int index) {
+                return RecipeCard(recipe: widget.recipeList[index]);
+              },
+              onStackFinished: () {},
+              itemChanged: (SwipeItem item, int index) async {
+                if (index == widget.recipeList.length - 2) {
+                  List<Data> nextRecipeList = (await API.fetchRecipeList(
+                          widget.categoryId, _pageIndex++, 30))
+                      .data!;
+                  widget.recipeList.addAll(nextRecipeList);
+                  for (int i = 0; i < nextRecipeList.length; i++) {
+                    _swipeItems.add(
+                      SwipeItem(
+                        content: nextRecipeList[i],
+                      ),
+                    );
+                  }
+                }
+              },
+              upSwipeAllowed: false,
+              fillSpace: true,
             ),
-          ],
-        ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                  onPressed: () {
+                    _matchEngine.currentItem?.nope();
+                  },
+                  child: const Text("Nope")),
+              ElevatedButton(
+                  onPressed: () {
+                    _matchEngine.currentItem?.superLike();
+                  },
+                  child: const Text("Superlike")),
+              ElevatedButton(
+                  onPressed: () {
+                    _matchEngine.currentItem?.like();
+                  },
+                  child: const Text("Like"))
+            ],
+          )
+        ],
       ),
     );
   }
