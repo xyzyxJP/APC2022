@@ -1,4 +1,6 @@
-import 'package:flutter/src/widgets/container.dart';
+import 'package:apc2022/test/test_recipe_detail.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 class RecipeDetailPage extends StatefulWidget {
@@ -9,8 +11,26 @@ class RecipeDetailPage extends StatefulWidget {
 }
 
 class _RecipeDetailPageState extends State<RecipeDetailPage> {
+  final _recipeDetail = testRecipeDetail;
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_recipeDetail.data!.title!),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(_recipeDetail.data!.description!,
+                  style: const TextStyle(fontSize: 20)),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
