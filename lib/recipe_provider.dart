@@ -43,7 +43,7 @@ class RecipeProvider extends ChangeNotifier {
       return null;
     }
 
-    if (_recipeListStack[_pageIndex].data!.length < _itemIndex) {
+    if (_recipeListStack[_pageIndex].data!.length < _itemIndex) {      
       _recipeListStack
           .add(await API.fetchRecipeList(_categoryId, _pageIndex++, 30));
       if (_recipeListStack[_pageIndex].data!.length < _itemIndex) {

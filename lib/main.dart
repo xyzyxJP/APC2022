@@ -1,5 +1,5 @@
 import 'package:apc2022/recipe_provider.dart';
-import 'package:apc2022/views/home/home.dart';
+import 'package:apc2022/views/recipe/recipe_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,8 +23,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const HomePage(title: 'APC2022 Home Page'),
-        // const RecipeListPage(),
+        home:
+            // const HomePage(title: 'APC2022 Home Page'),
+            const RecipeListPage(),
         // const RecipeDetailPage(),
       ),
     );
