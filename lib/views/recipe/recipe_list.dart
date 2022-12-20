@@ -1,6 +1,7 @@
 import 'package:apc2022/api/api.dart';
 import 'package:apc2022/models/recipe_list.dart';
 import 'package:apc2022/views/recipe/widgets/recipe_card.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 
@@ -26,6 +27,8 @@ class _RecipeListPageState extends State<RecipeListPage> {
   late MatchEngine _matchEngine;
   final _scaffoldKey = GlobalKey();
 
+  final List<Data> _favoriteList = [];
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +37,10 @@ class _RecipeListPageState extends State<RecipeListPage> {
       _swipeItems.add(
         SwipeItem(
           content: widget.recipeList[i],
+          likeAction: () {
+            _favoriteList.add(widget.recipeList[i]);
+            setState(() {});
+          },
         ),
       );
     }
@@ -48,58 +55,204 @@ class _RecipeListPageState extends State<RecipeListPage> {
       ),
       body: Column(
         children: [
-          SizedBox(
-            height: 600,
-            child: SwipeCards(
-              matchEngine: _matchEngine,
-              itemBuilder: (BuildContext context, int index) {
-                return RecipeCard(recipe: widget.recipeList[index]);
-              },
-              onStackFinished: () {},
-              itemChanged: (SwipeItem item, int index) async {
-                if (index == widget.recipeList.length - 2) {
-                  List<Data> nextRecipeList = (await API.fetchRecipeList(
-                          widget.categoryId, _pageIndex++, 30))
-                      .data!;
-                  widget.recipeList.addAll(nextRecipeList);
-                  for (int i = 0; i < nextRecipeList.length; i++) {
-                    _swipeItems.add(
-                      SwipeItem(
-                        content: nextRecipeList[i],
+          _buildSwipeCards(),
+          _buildActionButtons(),
+          _buildFavoriteBar()
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFavoriteBar() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ElevatedButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+            ),
+            builder: (BuildContext context) {
+              return _buildFavoriteList();
+            },
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'お気に入り (${_favoriteList.length})',
+            style: const TextStyle(fontSize: 16.0),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFavoriteList() {
+    return DraggableScrollableSheet(
+      expand: false,
+      builder: (context, scrollController) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'お気に入り (${_favoriteList.length})',
+                  style: const TextStyle(fontSize: 24.0),
+                ),
+              ),
+              Flexible(
+                child: ListView.builder(
+                  controller: scrollController,
+                  itemCount: _favoriteList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        height: 80.0,
+                        child: Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: CachedNetworkImage(
+                                imageUrl: _favoriteList[index]
+                                    .squareVideo!
+                                    .posterUrl!,
+                                errorWidget: (context, url, dynamic error) =>
+                                    const Icon(Icons.error),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _favoriteList[index].title!,
+                                    style: const TextStyle(fontSize: 20.0),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.whatshot,
+                                        color: Colors.white,
+                                        size: 20.0,
+                                      ),
+                                      Text(_favoriteList[index].calorie!,
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16.0)),
+                                      const SizedBox(width: 18.0),
+                                      const Icon(
+                                        Icons.timer,
+                                        color: Colors.white,
+                                        size: 20.0,
+                                      ),
+                                      Text(_favoriteList[index].cookingTime!,
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16.0)),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
-                  }
-                }
-              },
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              IconButton(
-                onPressed: () {
-                  _matchEngine.currentItem?.nope();
-                },
-                icon: const Icon(Icons.close),
-                iconSize: 48.0,
-              ),
-              IconButton(
-                onPressed: () {
-                  _matchEngine.currentItem?.superLike();
-                },
-                icon: const Icon(Icons.star),
-                iconSize: 48.0,
-              ),
-              IconButton(
-                onPressed: () {
-                  _matchEngine.currentItem?.like();
-                },
-                icon: const Icon(Icons.favorite),
-                iconSize: 48.0,
+                  },
+                ),
               ),
             ],
-          )
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              _matchEngine.currentItem?.nope();
+            },
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Icon(
+                Icons.close_rounded,
+                color: Colors.blue,
+                size: 40.0,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              _matchEngine.currentItem?.like();
+            },
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Icon(
+                Icons.favorite_rounded,
+                color: Colors.red,
+                size: 40.0,
+              ),
+            ),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSwipeCards() {
+    return SizedBox(
+      height: 600,
+      child: SwipeCards(
+        matchEngine: _matchEngine,
+        itemBuilder: (BuildContext context, int index) {
+          if (index + 1 < widget.recipeList.length) {
+            precacheImage(
+                CachedNetworkImageProvider(
+                    widget.recipeList[index + 1].squareVideo!.posterUrl!),
+                context);
+          }
+          return RecipeCard(recipe: widget.recipeList[index]);
+        },
+        onStackFinished: () {},
+        itemChanged: (SwipeItem item, int index) async {
+          if (index == widget.recipeList.length - 2) {
+            List<Data> nextRecipeList =
+                (await API.fetchRecipeList(widget.categoryId, _pageIndex++, 30))
+                    .data!;
+            widget.recipeList.addAll(nextRecipeList);
+            for (int i = 0; i < nextRecipeList.length; i++) {
+              _swipeItems.add(
+                SwipeItem(
+                  content: nextRecipeList[i],
+                ),
+              );
+            }
+          }
+        },
       ),
     );
   }
