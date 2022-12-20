@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'APC2022',
       theme: ThemeData(
         useMaterial3: true,
+        fontFamily: 'Murecho',
       ),
       home:
           // const HomePage(title: 'APC2022 Home Page'),
