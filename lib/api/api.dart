@@ -18,10 +18,13 @@ class API {
         jsonDecode(await response.stream.bytesToString()));
   }
 
-  // TODO: recipe_id を引数に recipe を返すメソッド
   static Future<RecipeDetail> fetchRecipeDetail(String recipeId) async {
-    var recipeDetail = RecipeDetail();
-
-    return recipeDetail;
+    var request = http.Request(
+        'GET',
+        Uri.parse(
+            'https://delishkitchen.tv/api/recipes/$recipeId?include_maintenance=true'));
+    http.StreamedResponse response = await request.send();
+    return RecipeDetail.fromJson(
+        jsonDecode(await response.stream.bytesToString()));
   }
 }

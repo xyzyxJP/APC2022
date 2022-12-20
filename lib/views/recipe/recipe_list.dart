@@ -67,8 +67,6 @@ class _RecipeListPageState extends State<RecipeListPage> {
                   }
                 }
               },
-              upSwipeAllowed: false,
-              fillSpace: true,
             ),
           ),
           Row(

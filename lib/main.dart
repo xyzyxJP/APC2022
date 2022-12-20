@@ -1,8 +1,13 @@
 import 'package:apc2022/test/test_recipe_list.dart';
 import 'package:apc2022/views/recipe/recipe_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
   runApp(const MyApp());
 }
 
