@@ -6,10 +6,14 @@ import 'package:swipe_cards/swipe_cards.dart';
 
 class RecipeListPage extends StatefulWidget {
   final String categoryId;
+  final String categoryName;
   final List<Data> recipeList;
 
   const RecipeListPage(
-      {super.key, required this.categoryId, required this.recipeList});
+      {super.key,
+      required this.categoryId,
+      required this.categoryName,
+      required this.recipeList});
 
   @override
   State<RecipeListPage> createState() => _RecipeListPageState();
@@ -40,7 +44,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text("Recipe List"),
+        title: Text(widget.categoryName),
       ),
       body: Column(
         children: [

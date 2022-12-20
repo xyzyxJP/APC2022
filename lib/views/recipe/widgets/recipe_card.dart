@@ -1,9 +1,12 @@
-import 'package:apc2022/models/recipe_list.dart';
+import 'package:apc2022/api/api.dart';
+import 'package:apc2022/models/recipe_detail.dart' as detail;
+import 'package:apc2022/models/recipe_list.dart' as list;
 import 'package:apc2022/views/recipe/widgets/photo_view.dart';
+import 'package:apc2022/views/recipe/widgets/recipe_detail.dart';
 import 'package:flutter/material.dart';
 
 class RecipeCard extends StatelessWidget {
-  final Data recipe;
+  final list.Data recipe;
 
   const RecipeCard({super.key, required this.recipe});
 
@@ -50,7 +53,9 @@ class RecipeCard extends StatelessWidget {
       right: 0.0,
       bottom: 0.0,
       child: GestureDetector(
-        onTap: () {
+        onTap: () async {
+          final detail.RecipeDetail recipeDetail =
+              await API.fetchRecipeDetail(recipe.id!);
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
@@ -60,17 +65,8 @@ class RecipeCard extends StatelessWidget {
             builder: (context) => DraggableScrollableSheet(
               expand: false,
               builder: (context, scrollController) {
-                return Container(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Text(recipe.title!),
-                      Text(recipe.calorie!),
-                      Text(recipe.cookingTime!),
-                      Text(recipe.description!),
-                      Text(recipe.squareVideo!.posterUrl!),
-                    ],
-                  ),
+                return RecipeDetailModal(
+                  recipe: recipeDetail.data!,
                 );
               },
             ),

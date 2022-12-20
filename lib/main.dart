@@ -1,5 +1,4 @@
-import 'package:apc2022/test/test_recipe_list.dart';
-import 'package:apc2022/views/recipe/recipe_list.dart';
+import 'package:apc2022/views/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -22,13 +21,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Murecho',
       ),
-      home:
-          // const HomePage(title: 'APC2022 Home Page'),
-          RecipeListPage(
-        categoryId: "458",
-        recipeList: testRecipeList.data!,
-      ),
-      // const RecipeDetailPage(),
+      home: const HomePage(title: 'APC2022 Home Page'),
     );
   }
 }
