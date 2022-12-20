@@ -5,7 +5,8 @@ import 'package:apc2022/models/recipe_list.dart';
 import 'package:http/http.dart' as http;
 
 class API {
-  static Future<RecipeList> fetchRecipeList(String categoryId, int page, int per) async {
+  static Future<RecipeList> fetchRecipeList(
+      String categoryId, int page, int per) async {
     var request = http.Request(
         'GET',
         Uri.parse(

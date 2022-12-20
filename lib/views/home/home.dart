@@ -1,3 +1,6 @@
+import 'package:apc2022/api/api.dart';
+import 'package:apc2022/models/recipe_list.dart';
+import 'package:apc2022/views/recipe/recipe_list.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,11 +22,27 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            Text(
-              'APC2022',
-            ),
-          ],
+          children: [_buildCategoryButton("458", "豚肉")],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryButton(String categoryId, String categoryName) =>
+      ElevatedButton(
+          onPressed: (() async => _onPressed(categoryId, categoryName)),
+          child: Text(categoryName));
+
+  void _onPressed(String categoryId, String categoryName) async {
+    final RecipeList recipeList = await API.fetchRecipeList(categoryId, 1, 30);
+    if (!mounted) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RecipeListPage(
+          categoryId: categoryId,
+          categoryName: categoryName,
+          recipeList: recipeList.data!,
         ),
       ),
     );
