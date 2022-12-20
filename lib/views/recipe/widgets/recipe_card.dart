@@ -34,7 +34,7 @@ class RecipeCard extends StatelessWidget {
                           recipe.squareVideo!.posterUrl!
                         ],
                       ),
-                      _buildProfile(),
+                      _buildProfile(context),
                     ]
                   : <Widget>[],
             ),
@@ -44,59 +44,97 @@ class RecipeCard extends StatelessWidget {
     );
   }
 
-  Widget _buildProfile() {
+  Widget _buildProfile(BuildContext context) {
     return Positioned(
       left: 0.0,
       right: 0.0,
       bottom: 0.0,
-      child: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-              Colors.transparent,
-              Colors.black.withOpacity(0.8),
-            ])),
-        padding: const EdgeInsets.all(24.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(recipe.title!,
-                      style:
-                          const TextStyle(color: Colors.white, fontSize: 24.0)),
-                  const SizedBox(height: 8.0),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+      child: GestureDetector(
+        onTap: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+            ),
+            builder: (context) => DraggableScrollableSheet(
+              expand: false,
+              builder: (context, scrollController) {
+                return Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
                     children: [
-                      const Icon(
-                        Icons.timer,
-                        color: Colors.white,
-                        size: 24.0,
-                      ),
-                      Text(recipe.cookingTime!,
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 18.0)),
-                      const SizedBox(width: 10.0),
-                      const Icon(
-                        IconData(0xea8c, fontFamily: 'MaterialIcons'),
-                        color: Colors.white,
-                        size: 24.0,
-                      ),
-                      Text(recipe.calorie!,
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 18.0)),
+                      Text(recipe.title!),
+                      Text(recipe.calorie!),
+                      Text(recipe.cookingTime!),
+                      Text(recipe.description!),
+                      Text(recipe.squareVideo!.posterUrl!),
                     ],
                   ),
-                ],
-              ),
+                );
+              },
             ),
-          ],
+          );
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                Colors.transparent,
+                Colors.black.withOpacity(0.8),
+              ])),
+          padding: const EdgeInsets.all(24.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(recipe.title!,
+                        style: const TextStyle(
+                            color: Colors.white, fontSize: 24.0)),
+                    const SizedBox(height: 8.0),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.whatshot,
+                              color: Colors.white,
+                              size: 24.0,
+                            ),
+                            Text(recipe.calorie!,
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 18.0)),
+                            const SizedBox(width: 18.0),
+                            const Icon(
+                              Icons.timer,
+                              color: Colors.white,
+                              size: 24.0,
+                            ),
+                            Text(recipe.cookingTime!,
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 18.0)),
+                          ],
+                        ),
+                        const Icon(
+                          Icons.info,
+                          color: Colors.white,
+                          size: 24.0,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -74,21 +74,27 @@ class _RecipeListPageState extends State<RecipeListPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
-                  onPressed: () {
-                    _matchEngine.currentItem?.nope();
-                  },
-                  child: const Text("Nope")),
-              ElevatedButton(
-                  onPressed: () {
-                    _matchEngine.currentItem?.superLike();
-                  },
-                  child: const Text("Superlike")),
-              ElevatedButton(
-                  onPressed: () {
-                    _matchEngine.currentItem?.like();
-                  },
-                  child: const Text("Like"))
+              IconButton(
+                onPressed: () {
+                  _matchEngine.currentItem?.nope();
+                },
+                icon: const Icon(Icons.close),
+                iconSize: 48.0,
+              ),
+              IconButton(
+                onPressed: () {
+                  _matchEngine.currentItem?.superLike();
+                },
+                icon: const Icon(Icons.star),
+                iconSize: 48.0,
+              ),
+              IconButton(
+                onPressed: () {
+                  _matchEngine.currentItem?.like();
+                },
+                icon: const Icon(Icons.favorite),
+                iconSize: 48.0,
+              ),
             ],
           )
         ],
