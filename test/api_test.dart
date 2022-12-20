@@ -10,6 +10,7 @@ void main() {
       print(recipeList.data![0].title);
     }
   });
+
   test('API fetch recipe detail test', () async {
     var recipeDetail = await API.fetchRecipeDetail("220499003148599645");
     expect(recipeDetail.data!.id, "220499003148599645");
