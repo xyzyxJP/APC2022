@@ -87,9 +87,7 @@ class _PhotoViewState extends State<PhotoView> {
 
   @override
   Widget build(BuildContext context) {
-    for (var photoPath in widget.photoPaths) {
-      precacheImage(CachedNetworkImageProvider(photoPath), context);
-    }
+    
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
