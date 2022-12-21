@@ -10,11 +10,12 @@ class RecipeListPage extends StatefulWidget {
   final String categoryName;
   final List<Data> recipeList;
 
-  const RecipeListPage(
-      {super.key,
-      required this.categoryId,
-      required this.categoryName,
-      required this.recipeList});
+  const RecipeListPage({
+    super.key,
+    required this.categoryId,
+    required this.categoryName,
+    required this.recipeList,
+  });
 
   @override
   State<RecipeListPage> createState() => _RecipeListPageState();
@@ -73,8 +74,8 @@ class _RecipeListPageState extends State<RecipeListPage> {
             useRootNavigator: true,
             isScrollControlled: true,
             shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
-            ),
+                borderRadius:
+                    BorderRadius.vertical(top: Radius.circular(16.0))),
             builder: (BuildContext context) {
               return _buildFavoriteList();
             },
@@ -159,15 +160,19 @@ class _RecipeListPageState extends State<RecipeListPage> {
                       Icons.whatshot,
                       size: 20.0,
                     ),
-                    Text(_favoriteList[index].calorie!,
-                        style: const TextStyle(fontSize: 16.0)),
+                    Text(
+                      _favoriteList[index].calorie!,
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
                     const SizedBox(width: 18.0),
                     const Icon(
                       Icons.timer,
                       size: 20.0,
                     ),
-                    Text(_favoriteList[index].cookingTime!,
-                        style: const TextStyle(fontSize: 16.0)),
+                    Text(
+                      _favoriteList[index].cookingTime!,
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
                   ],
                 ),
               ],

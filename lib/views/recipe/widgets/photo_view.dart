@@ -6,7 +6,10 @@ class PhotoView extends StatefulWidget {
   final List<String> photoPaths;
   final int photoIndex = 0;
 
-  const PhotoView({super.key, required this.photoPaths});
+  const PhotoView({
+    super.key,
+    required this.photoPaths,
+  });
 
   @override
   State<PhotoView> createState() => _PhotoViewState();
@@ -87,7 +90,6 @@ class _PhotoViewState extends State<PhotoView> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[

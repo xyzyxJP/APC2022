@@ -4,8 +4,11 @@ class PhotoIndicator extends StatelessWidget {
   final int photoIndex;
   final int photoCount;
 
-  const PhotoIndicator(
-      {super.key, required this.photoIndex, required this.photoCount});
+  const PhotoIndicator({
+    super.key,
+    required this.photoIndex,
+    required this.photoCount,
+  });
 
   Widget _buildInactiveIndicator() {
     return Expanded(
@@ -14,7 +17,9 @@ class PhotoIndicator extends StatelessWidget {
         child: Container(
           height: 3.0,
           decoration: BoxDecoration(
-              color: Colors.black38, borderRadius: BorderRadius.circular(2.5)),
+            color: Colors.black38,
+            borderRadius: BorderRadius.circular(2.5),
+          ),
         ),
       ),
     );
@@ -27,15 +32,17 @@ class PhotoIndicator extends StatelessWidget {
         child: Container(
           height: 3.0,
           decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(2.5),
-              boxShadow: const [
-                BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 2.0,
-                    spreadRadius: 0.0,
-                    offset: Offset(0.0, 1.0))
-              ]),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(2.5),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 2.0,
+                spreadRadius: 0.0,
+                offset: Offset(0.0, 1.0),
+              )
+            ],
+          ),
         ),
       ),
     );

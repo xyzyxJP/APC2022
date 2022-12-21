@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class RecipeDetailModal extends StatelessWidget {
   final Data recipe;
+
   const RecipeDetailModal({super.key, required this.recipe});
 
   @override
