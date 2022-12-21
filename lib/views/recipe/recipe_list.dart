@@ -39,8 +39,9 @@ class _RecipeListPageState extends State<RecipeListPage> {
         SwipeItem(
           content: widget.recipeList[i],
           likeAction: () {
-            _favoriteList.add(widget.recipeList[i]);
-            setState(() {});
+            setState(() {
+              _favoriteList.add(widget.recipeList[i]);
+            });
           },
         ),
       );
@@ -77,7 +78,11 @@ class _RecipeListPageState extends State<RecipeListPage> {
                 borderRadius:
                     BorderRadius.vertical(top: Radius.circular(16.0))),
             builder: (BuildContext context) {
-              return _buildFavoriteList();
+              return StatefulBuilder(
+                builder: (context, setState) {
+                  return _buildFavoriteList(setState);
+                },
+              );
             },
           );
         },
@@ -92,7 +97,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
     );
   }
 
-  Widget _buildFavoriteList() {
+  Widget _buildFavoriteList(void Function(void Function()) setState) {
     return DraggableScrollableSheet(
       maxChildSize: (MediaQuery.of(context).size.height -
               MediaQuery.of(context).padding.top) /
@@ -115,7 +120,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
                   controller: scrollController,
                   itemCount: _favoriteList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return _buildRecipeRow(index);
+                    return _buildRecipeRow(index, setState);
                   },
                 ),
               ),
@@ -126,59 +131,82 @@ class _RecipeListPageState extends State<RecipeListPage> {
     );
   }
 
-  Widget _buildRecipeRow(int index) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          SizedBox(
-            height: 80.0,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.0),
-              child: CachedNetworkImage(
-                imageUrl: _favoriteList[index].squareVideo!.posterUrl!,
-                errorWidget: (context, url, dynamic error) =>
-                    const Icon(Icons.error),
-                fit: BoxFit.cover,
+  Widget _buildRecipeRow(
+      int index, void Function(void Function()) modalSetState) {
+    return Dismissible(
+      key: Key(_favoriteList[index].id!),
+      background: Container(
+        padding: const EdgeInsets.only(
+          right: 24.0,
+        ),
+        alignment: AlignmentDirectional.centerEnd,
+        color: Colors.red,
+        child: const Icon(
+          Icons.delete,
+          color: Colors.white,
+        ),
+      ),
+      onDismissed: (direction) {
+        _favoriteList.removeAt(index);
+        modalSetState(() {});
+        setState(() {});
+      },
+      direction: DismissDirection.endToStart,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            SizedBox(
+              height: 80.0,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: CachedNetworkImage(
+                  imageUrl: _favoriteList[index].squareVideo!.posterUrl!,
+                  errorWidget: (context, url, dynamic error) =>
+                      const Icon(Icons.error),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _favoriteList[index].title!,
-                  style: const TextStyle(fontSize: 20.0),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Row(
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
-                      Icons.whatshot,
-                      size: 20.0,
-                    ),
                     Text(
-                      _favoriteList[index].calorie!,
-                      style: const TextStyle(fontSize: 16.0),
+                      _favoriteList[index].title!,
+                      style: const TextStyle(fontSize: 20.0),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(width: 18.0),
-                    const Icon(
-                      Icons.timer,
-                      size: 20.0,
-                    ),
-                    Text(
-                      _favoriteList[index].cookingTime!,
-                      style: const TextStyle(fontSize: 16.0),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.whatshot,
+                          size: 20.0,
+                        ),
+                        Text(
+                          _favoriteList[index].calorie!,
+                          style: const TextStyle(fontSize: 16.0),
+                        ),
+                        const SizedBox(width: 18.0),
+                        const Icon(
+                          Icons.timer,
+                          size: 20.0,
+                        ),
+                        Text(
+                          _favoriteList[index].cookingTime!,
+                          style: const TextStyle(fontSize: 16.0),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
