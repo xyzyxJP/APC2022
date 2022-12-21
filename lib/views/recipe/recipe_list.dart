@@ -83,7 +83,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            'お気に入り (${_favoriteList.length})',
+            '${_favoriteList.length}件のお気に入り',
             style: const TextStyle(fontSize: 16.0),
           ),
         ),
@@ -94,8 +94,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
   Widget _buildFavoriteList() {
     return DraggableScrollableSheet(
       maxChildSize: (MediaQuery.of(context).size.height -
-              (MediaQuery.of(context).padding.top +
-                  AppBar().preferredSize.height)) /
+              MediaQuery.of(context).padding.top) /
           MediaQuery.of(context).size.height,
       expand: false,
       builder: (context, scrollController) {
@@ -106,7 +105,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'お気に入り (${_favoriteList.length})',
+                  '${_favoriteList.length}件のお気に入り',
                   style: const TextStyle(fontSize: 24.0),
                 ),
               ),
