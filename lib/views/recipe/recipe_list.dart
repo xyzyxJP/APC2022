@@ -70,6 +70,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
         onPressed: () {
           showModalBottomSheet(
             context: context,
+            useRootNavigator: true,
             isScrollControlled: true,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
@@ -92,6 +93,10 @@ class _RecipeListPageState extends State<RecipeListPage> {
 
   Widget _buildFavoriteList() {
     return DraggableScrollableSheet(
+      maxChildSize: (MediaQuery.of(context).size.height -
+              (MediaQuery.of(context).padding.top +
+                  AppBar().preferredSize.height)) /
+          MediaQuery.of(context).size.height,
       expand: false,
       builder: (context, scrollController) {
         return Padding(
@@ -105,71 +110,12 @@ class _RecipeListPageState extends State<RecipeListPage> {
                   style: const TextStyle(fontSize: 24.0),
                 ),
               ),
-              Flexible(
+              Expanded(
                 child: ListView.builder(
                   controller: scrollController,
                   itemCount: _favoriteList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        height: 80.0,
-                        child: Row(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: CachedNetworkImage(
-                                imageUrl: _favoriteList[index]
-                                    .squareVideo!
-                                    .posterUrl!,
-                                errorWidget: (context, url, dynamic error) =>
-                                    const Icon(Icons.error),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    _favoriteList[index].title!,
-                                    style: const TextStyle(fontSize: 20.0),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.whatshot,
-                                        color: Colors.white,
-                                        size: 20.0,
-                                      ),
-                                      Text(_favoriteList[index].calorie!,
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16.0)),
-                                      const SizedBox(width: 18.0),
-                                      const Icon(
-                                        Icons.timer,
-                                        color: Colors.white,
-                                        size: 20.0,
-                                      ),
-                                      Text(_favoriteList[index].cookingTime!,
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16.0)),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
+                    return _buildRecipeRow(index);
                   },
                 ),
               ),
@@ -177,6 +123,59 @@ class _RecipeListPageState extends State<RecipeListPage> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildRecipeRow(int index) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          SizedBox(
+            height: 80.0,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: CachedNetworkImage(
+                imageUrl: _favoriteList[index].squareVideo!.posterUrl!,
+                errorWidget: (context, url, dynamic error) =>
+                    const Icon(Icons.error),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _favoriteList[index].title!,
+                  style: const TextStyle(fontSize: 20.0),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.whatshot,
+                      size: 20.0,
+                    ),
+                    Text(_favoriteList[index].calorie!,
+                        style: const TextStyle(fontSize: 16.0)),
+                    const SizedBox(width: 18.0),
+                    const Icon(
+                      Icons.timer,
+                      size: 20.0,
+                    ),
+                    Text(_favoriteList[index].cookingTime!,
+                        style: const TextStyle(fontSize: 16.0)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
