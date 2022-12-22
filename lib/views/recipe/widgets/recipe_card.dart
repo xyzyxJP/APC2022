@@ -1,12 +1,12 @@
-import 'package:apc2022/api/api.dart';
 import 'package:apc2022/models/recipe_detail.dart' as detail;
 import 'package:apc2022/models/recipe_list.dart' as list;
 import 'package:apc2022/views/recipe/widgets/photo_view.dart';
 import 'package:apc2022/views/recipe/widgets/recipe_detail.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class RecipeCard extends StatelessWidget {
-  final list.Data recipe;
+  final MapEntry<list.Data, detail.Data> recipe;
 
   const RecipeCard({
     super.key,
@@ -36,9 +36,11 @@ class RecipeCard extends StatelessWidget {
               children: [
                 PhotoView(
                   photoPaths: [
-                    recipe.squareVideo!.posterUrl!,
-                    recipe.squareVideo!.posterUrl!
-                  ],
+                        recipe.key.squareVideo!.posterUrl!,
+                      ] +
+                      recipe.value.recipeSteps!
+                          .map((e) => e.squareVideo!.posterUrl!)
+                          .toList(),
                 ),
                 _buildProfile(context),
               ],
@@ -50,14 +52,18 @@ class RecipeCard extends StatelessWidget {
   }
 
   Widget _buildProfile(BuildContext context) {
+    for (var i = 1; i < recipe.value.recipeSteps!.length; i++) {
+      precacheImage(
+          CachedNetworkImageProvider(
+              recipe.value.recipeSteps![i].squareVideo!.posterUrl!),
+          context);
+    }
     return Positioned(
       left: 0.0,
       right: 0.0,
       bottom: 0.0,
       child: GestureDetector(
         onTap: () async {
-          final detail.RecipeDetail recipeDetail =
-              await API.fetchRecipeDetail(recipe.id!);
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
@@ -67,7 +73,7 @@ class RecipeCard extends StatelessWidget {
             builder: (context) => DraggableScrollableSheet(
               expand: false,
               builder: (context, scrollController) {
-                return RecipeDetailModal(recipe: recipeDetail.data!);
+                return RecipeDetailModal(recipe: recipe.value);
               },
             ),
           );
@@ -93,7 +99,7 @@ class RecipeCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Text(
-                      recipe.title!,
+                      recipe.key.title!,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 24.0,
@@ -112,7 +118,7 @@ class RecipeCard extends StatelessWidget {
                               size: 24.0,
                             ),
                             Text(
-                              recipe.calorie!,
+                              recipe.key.calorie!,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 18.0,
@@ -125,7 +131,7 @@ class RecipeCard extends StatelessWidget {
                               size: 24.0,
                             ),
                             Text(
-                              recipe.cookingTime!,
+                              recipe.key.cookingTime!,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 18.0,

@@ -1,5 +1,6 @@
 import 'package:apc2022/api/api.dart';
-import 'package:apc2022/models/recipe_list.dart';
+import 'package:apc2022/models/recipe_detail.dart' as detail;
+import 'package:apc2022/models/recipe_list.dart' as list;
 import 'package:apc2022/views/recipe/widgets/recipe_card.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import 'package:swipe_cards/swipe_cards.dart';
 class RecipeListPage extends StatefulWidget {
   final String categoryId;
   final String categoryName;
-  final List<Data> recipeList;
+  final Map<list.Data, detail.Data> recipeList;
 
   const RecipeListPage({
     super.key,
@@ -28,7 +29,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
   late MatchEngine _matchEngine;
   final _scaffoldKey = GlobalKey();
 
-  final List<Data> _favoriteList = [];
+  final List<list.Data> _favoriteList = [];
 
   @override
   void initState() {
@@ -40,7 +41,7 @@ class _RecipeListPageState extends State<RecipeListPage> {
           content: widget.recipeList[i],
           likeAction: () {
             setState(() {
-              _favoriteList.add(widget.recipeList[i]);
+              _favoriteList.add(widget.recipeList.keys.elementAt(i));
             });
           },
         ),
@@ -262,18 +263,28 @@ class _RecipeListPageState extends State<RecipeListPage> {
         itemBuilder: (BuildContext context, int index) {
           if (index + 1 < widget.recipeList.length) {
             precacheImage(
-                CachedNetworkImageProvider(
-                    widget.recipeList[index + 1].squareVideo!.posterUrl!),
+                CachedNetworkImageProvider(widget.recipeList.keys
+                    .elementAt(index)
+                    .squareVideo!
+                    .posterUrl!),
                 context);
           }
-          return RecipeCard(recipe: widget.recipeList[index]);
+          return RecipeCard(recipe: widget.recipeList.entries.elementAt(index));
         },
         onStackFinished: () {},
         itemChanged: (SwipeItem item, int index) async {
           if (index == widget.recipeList.length - 2) {
-            List<Data> nextRecipeList =
+            final Map<list.Data, detail.Data> nextRecipeList = {};
+            nextRecipeList.addAll(
                 (await API.fetchRecipeList(widget.categoryId, _pageIndex++, 30))
-                    .data!;
+                    .data!
+                    .asMap()
+                    .map(
+                      (key, value) => MapEntry(
+                        value,
+                        detail.Data(),
+                      ),
+                    ));
             widget.recipeList.addAll(nextRecipeList);
             for (int i = 0; i < nextRecipeList.length; i++) {
               _swipeItems.add(
@@ -283,6 +294,11 @@ class _RecipeListPageState extends State<RecipeListPage> {
               );
             }
           }
+          final detail.Data recipeDetail = (await API.fetchRecipeDetail(
+                  widget.recipeList.keys.elementAt(index + 1).id!))
+              .data!;
+          widget.recipeList.update(widget.recipeList.keys.elementAt(index + 2),
+              (value) => recipeDetail);
         },
       ),
     );

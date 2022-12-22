@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 class PhotoView extends StatefulWidget {
   final List<String> photoPaths;
-  final int photoIndex = 0;
 
   const PhotoView({
     super.key,
@@ -16,12 +15,11 @@ class PhotoView extends StatefulWidget {
 }
 
 class _PhotoViewState extends State<PhotoView> {
-  late int photoIndex;
+  int photoIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    photoIndex = widget.photoIndex;
   }
 
   void _prevImage() {
