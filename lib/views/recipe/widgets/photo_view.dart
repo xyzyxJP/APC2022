@@ -4,21 +4,22 @@ import 'package:flutter/material.dart';
 
 class PhotoView extends StatefulWidget {
   final List<String> photoPaths;
-  final int photoIndex = 0;
 
-  const PhotoView({super.key, required this.photoPaths});
+  const PhotoView({
+    super.key,
+    required this.photoPaths,
+  });
 
   @override
   State<PhotoView> createState() => _PhotoViewState();
 }
 
 class _PhotoViewState extends State<PhotoView> {
-  late int photoIndex;
+  int photoIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    photoIndex = widget.photoIndex;
   }
 
   void _prevImage() {
@@ -58,7 +59,7 @@ class _PhotoViewState extends State<PhotoView> {
   Widget _buildControls() {
     return Stack(
       fit: StackFit.expand,
-      children: <Widget>[
+      children: [
         GestureDetector(
           onTap: _prevImage,
           child: FractionallySizedBox(
@@ -87,10 +88,9 @@ class _PhotoViewState extends State<PhotoView> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Stack(
       fit: StackFit.expand,
-      children: <Widget>[
+      children: [
         _buildBackground(),
         _buildIndicator(),
         _buildControls(),
