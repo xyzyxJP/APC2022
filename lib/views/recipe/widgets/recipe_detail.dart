@@ -95,15 +95,13 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
               ),
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: recipe.recipeSteps!.length,
-              itemBuilder: (context, index) {
-                return _buildRecipeStep(recipe.recipeSteps![index]);
-              },
-            ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: recipe.recipeSteps!.length,
+            itemBuilder: (context, index) {
+              return _buildRecipeStep(recipe.recipeSteps![index]);
+            },
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
