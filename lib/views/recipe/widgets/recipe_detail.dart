@@ -2,6 +2,7 @@ import 'package:apc2022/models/recipe_detail.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
@@ -65,12 +66,19 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
             ],
           ),
           ListView.builder(
+            padding: const EdgeInsets.only(top: 8.0),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: recipe.ingredientGroups!.length,
             itemBuilder: (context, index) {
               return _buildIngredientGroup(recipe.ingredientGroups![index]);
             },
+          ),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Divider(
+              thickness: 4.0,
+            ),
           ),
           Center(
             child: _controller.value.isInitialized
@@ -95,6 +103,12 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
               ),
             ),
           ),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Divider(
+              thickness: 4.0,
+            ),
+          ),
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -103,13 +117,19 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
               return _buildRecipeStep(recipe.recipeSteps![index]);
             },
           ),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Divider(
+              thickness: 4.0,
+            ),
+          ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: ElevatedButton(
               onPressed: () {
                 launchUrl(
-                  Uri.parse("https://delishkitchen.tv/recipes/${recipe.id}"),
-                );
+                    Uri.parse('https://delishkitchen.tv/recipes/${recipe.id}'),
+                    mode: LaunchMode.externalApplication);
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -120,6 +140,30 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
                     SizedBox(width: 8.0),
                     Text(
                       'ブラウザで開く',
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: ElevatedButton(
+              onPressed: () {
+                Share.share(
+                  '${recipe.title!}\nhttps://delishkitchen.tv/recipes/${recipe.id}',
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.share),
+                    SizedBox(width: 8.0),
+                    Text(
+                      'リンクを共有',
                       style: TextStyle(fontSize: 16.0),
                     ),
                   ],
@@ -179,7 +223,7 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
 
   Widget _buildIngredientGroup(IngredientGroups? ingredientGroups) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
           Container(
@@ -202,7 +246,7 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
             itemCount: ingredientGroups.recipeIngredients!.length,
             itemBuilder: (context, index) {
               return Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(top: 8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
