@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:apc2022/models/cooking_report.dart';
 import 'package:apc2022/models/recipe_detail.dart';
 import 'package:apc2022/models/recipe_list.dart';
 import 'package:http/http.dart' as http;
@@ -23,6 +24,17 @@ class API {
             'https://delishkitchen.tv/api/recipes/$recipeId?include_maintenance=true'));
     http.StreamedResponse response = await request.send();
     return RecipeDetail.fromJson(
+        jsonDecode(await response.stream.bytesToString()));
+  }
+
+  static Future<CookingReport> fetchCookingReport(
+      String recipeId, int count) async {
+    var request = http.Request(
+        'GET',
+        Uri.parse(
+            'https://delishkitchen.tv/api/recipes/$recipeId/cooking_reports/top_summary?count=$count'));
+    http.StreamedResponse response = await request.send();
+    return CookingReport.fromJson(
         jsonDecode(await response.stream.bytesToString()));
   }
 }

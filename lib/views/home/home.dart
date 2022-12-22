@@ -1,5 +1,5 @@
 import 'package:apc2022/api/api.dart';
-import 'package:apc2022/models/recipe_list.dart';
+import 'package:apc2022/models/recipe.dart';
 import 'package:apc2022/views/recipe/recipe_list.dart';
 import 'package:flutter/material.dart';
 
@@ -34,7 +34,13 @@ class _HomePageState extends State<HomePage> {
           child: Text(categoryName));
 
   void _onPressed(String categoryId, String categoryName) async {
-    final RecipeList recipeList = await API.fetchRecipeList(categoryId, 1, 30);
+    final List<Recipe> recipeList = [];
+    recipeList.addAll((await API.fetchRecipeList(categoryId, 1, 30)).data!.map(
+          (e) => Recipe.init(e),
+        ));
+    for (var i = 0; i < 3; i++) {
+      await recipeList[i].fetchBody();
+    }
     if (!mounted) return;
     Navigator.push(
       context,
@@ -42,7 +48,7 @@ class _HomePageState extends State<HomePage> {
         builder: (context) => RecipeListPage(
           categoryId: categoryId,
           categoryName: categoryName,
-          recipeList: recipeList.data!,
+          recipeList: recipeList,
         ),
       ),
     );
