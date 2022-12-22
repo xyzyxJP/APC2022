@@ -18,4 +18,12 @@ void main() {
       print(recipeDetail.data!.title);
     }
   });
+
+  test('API fetch cooking report test', () async {
+    var cookingReport = await API.fetchCookingReport("220499003148599645", 10);
+    expect(cookingReport.data!.list!.length, 10);
+    if (kDebugMode) {
+      print(cookingReport.data!.rateAverage);
+    }
+  });
 }
