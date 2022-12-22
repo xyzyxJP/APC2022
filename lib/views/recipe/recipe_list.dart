@@ -1,6 +1,7 @@
 import 'package:apc2022/api/api.dart';
 import 'package:apc2022/models/recipe.dart';
 import 'package:apc2022/views/recipe/widgets/recipe_card.dart';
+import 'package:apc2022/views/recipe/widgets/recipe_detail.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe_cards/swipe_cards.dart';
@@ -133,80 +134,96 @@ class _RecipeListPageState extends State<RecipeListPage> {
 
   Widget _buildRecipeRow(
       int index, void Function(void Function()) modalSetState) {
-    return Dismissible(
-      key: Key(_favoriteList[index].id!),
-      background: Container(
-        padding: const EdgeInsets.only(
-          right: 24.0,
-        ),
-        alignment: AlignmentDirectional.centerEnd,
-        color: Colors.red,
-        child: const Icon(
-          Icons.delete,
-          color: Colors.white,
-        ),
-      ),
-      onDismissed: (direction) {
-        _favoriteList.removeAt(index);
-        modalSetState(() {});
-        setState(() {});
+    final recipe = _favoriteList[index];
+    return GestureDetector(
+      onTap: () async {
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16.0))),
+          builder: (context) => DraggableScrollableSheet(
+            expand: false,
+            builder: (context, scrollController) {
+              return RecipeDetailModal(recipe: recipe.content);
+            },
+          ),
+        );
       },
-      direction: DismissDirection.endToStart,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            SizedBox(
-              height: 80.0,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: CachedNetworkImage(
-                  imageUrl:
-                      _favoriteList[index].outline.squareVideo!.posterUrl!,
-                  errorWidget: (context, url, dynamic error) =>
-                      const Icon(Icons.error),
-                  fit: BoxFit.cover,
+      child: Dismissible(
+        key: Key(_favoriteList[index].id),
+        background: Container(
+          padding: const EdgeInsets.only(
+            right: 24.0,
+          ),
+          alignment: AlignmentDirectional.centerEnd,
+          color: Colors.red,
+          child: const Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
+        ),
+        onDismissed: (direction) {
+          _favoriteList.removeAt(index);
+          modalSetState(() {});
+          setState(() {});
+        },
+        direction: DismissDirection.endToStart,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              SizedBox(
+                height: 80.0,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: CachedNetworkImage(
+                    imageUrl: recipe.outline.squareVideo!.posterUrl!,
+                    errorWidget: (context, url, dynamic error) =>
+                        const Icon(Icons.error),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _favoriteList[index].outline.title!,
-                      style: const TextStyle(fontSize: 20.0),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.whatshot,
-                          size: 20.0,
-                        ),
-                        Text(
-                          _favoriteList[index].outline.calorie!,
-                          style: const TextStyle(fontSize: 16.0),
-                        ),
-                        const SizedBox(width: 18.0),
-                        const Icon(
-                          Icons.timer,
-                          size: 20.0,
-                        ),
-                        Text(
-                          _favoriteList[index].outline.cookingTime!,
-                          style: const TextStyle(fontSize: 16.0),
-                        ),
-                      ],
-                    ),
-                  ],
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        recipe.outline.title!,
+                        style: const TextStyle(fontSize: 20.0),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.whatshot,
+                            size: 20.0,
+                          ),
+                          Text(
+                            recipe.outline.calorie!,
+                            style: const TextStyle(fontSize: 16.0),
+                          ),
+                          const SizedBox(width: 18.0),
+                          const Icon(
+                            Icons.timer,
+                            size: 20.0,
+                          ),
+                          Text(
+                            recipe.outline.cookingTime!,
+                            style: const TextStyle(fontSize: 16.0),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
