@@ -10,11 +10,20 @@ void main() {
       print(recipeList.data![0].title);
     }
   });
+
   test('API fetch recipe detail test', () async {
     var recipeDetail = await API.fetchRecipeDetail("220499003148599645");
     expect(recipeDetail.data!.id, "220499003148599645");
     if (kDebugMode) {
       print(recipeDetail.data!.title);
+    }
+  });
+
+  test('API fetch cooking report test', () async {
+    var cookingReport = await API.fetchCookingReport("220499003148599645", 10);
+    expect(cookingReport.data!.list!.length, 10);
+    if (kDebugMode) {
+      print(cookingReport.data!.rateAverage);
     }
   });
 }
