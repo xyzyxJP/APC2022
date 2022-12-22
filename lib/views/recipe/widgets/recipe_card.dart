@@ -66,15 +66,20 @@ class RecipeCard extends StatelessWidget {
         onTap: () async {
           showModalBottomSheet(
             context: context,
+            useRootNavigator: true,
             isScrollControlled: true,
             shape: const RoundedRectangleBorder(
                 borderRadius:
                     BorderRadius.vertical(top: Radius.circular(16.0))),
             builder: (context) => DraggableScrollableSheet(
+              maxChildSize: (MediaQuery.of(context).size.height -
+                      (MediaQuery.of(context).padding.top +
+                          AppBar().preferredSize.height)) /
+                  MediaQuery.of(context).size.height,
               expand: false,
-              builder: (context, scrollController) {
-                return RecipeDetailModal(recipe: recipe.content);
-              },
+              builder: (context, scrollController) => RecipeDetailModal(
+                  recipe: recipeDetail.data!,
+                  scrollController: scrollController),
             ),
           );
         },
