@@ -17,7 +17,7 @@ class CookingReport {
 }
 
 class Data {
-  double? rateAverage;
+  num? rateAverage;
   num? star;
   int? totalReportCount;
   List<ListChild>? list;

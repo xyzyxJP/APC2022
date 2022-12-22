@@ -35,18 +35,18 @@ class _RecipeListPageState extends State<RecipeListPage> {
   void initState() {
     super.initState();
     _matchEngine = MatchEngine(swipeItems: _swipeItems);
-    for (int i = 0; i < widget.recipeList.length; i++) {
-      _swipeItems.add(
-        SwipeItem(
-          content: widget.recipeList[i],
+    _swipeItems.addAll(
+      widget.recipeList.map(
+        (e) => SwipeItem(
+          content: e,
           likeAction: () {
             setState(() {
-              _favoriteList.add(widget.recipeList[i]);
+              _favoriteList.add(e);
             });
           },
         ),
-      );
-    }
+      ),
+    );
   }
 
   @override
@@ -291,14 +291,24 @@ class _RecipeListPageState extends State<RecipeListPage> {
         },
         onStackFinished: () {},
         itemChanged: (SwipeItem item, int index) async {
-          if (index == widget.recipeList.length - 2) {
-            API.fetchRecipeList(widget.categoryId, _pageIndex++, 30).then(
+          if (index == widget.recipeList.length - 3) {
+            await API.fetchRecipeList(widget.categoryId, _pageIndex++, 30).then(
               (value) {
                 final List<Recipe> nextRecipeList =
                     value.data!.map((e) => Recipe.init(e)).toList();
                 widget.recipeList.addAll(nextRecipeList);
-                _swipeItems
-                    .addAll(nextRecipeList.map((e) => SwipeItem(content: e)));
+                _swipeItems.addAll(
+                  nextRecipeList.map(
+                    (e) => SwipeItem(
+                      content: e,
+                      likeAction: () {
+                        setState(() {
+                          _favoriteList.add(e);
+                        });
+                      },
+                    ),
+                  ),
+                );
               },
             );
           }
