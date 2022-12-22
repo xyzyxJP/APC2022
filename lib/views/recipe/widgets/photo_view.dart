@@ -59,7 +59,7 @@ class _PhotoViewState extends State<PhotoView> {
   Widget _buildControls() {
     return Stack(
       fit: StackFit.expand,
-      children: <Widget>[
+      children: [
         GestureDetector(
           onTap: _prevImage,
           child: FractionallySizedBox(
@@ -90,7 +90,7 @@ class _PhotoViewState extends State<PhotoView> {
   Widget build(BuildContext context) {
     return Stack(
       fit: StackFit.expand,
-      children: <Widget>[
+      children: [
         _buildBackground(),
         _buildIndicator(),
         _buildControls(),
