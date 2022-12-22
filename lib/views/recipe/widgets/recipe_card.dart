@@ -78,7 +78,7 @@ class RecipeCard extends StatelessWidget {
                   MediaQuery.of(context).size.height,
               expand: false,
               builder: (context, scrollController) => RecipeDetailModal(
-                  recipe: recipeDetail.data!,
+                  recipe: recipe.content,
                   scrollController: scrollController),
             ),
           );

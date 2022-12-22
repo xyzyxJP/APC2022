@@ -145,7 +145,10 @@ class _RecipeListPageState extends State<RecipeListPage> {
           builder: (context) => DraggableScrollableSheet(
             expand: false,
             builder: (context, scrollController) {
-              return RecipeDetailModal(recipe: recipe.content);
+              return RecipeDetailModal(
+                recipe: recipe.content,
+                scrollController: scrollController,
+              );
             },
           ),
         );
