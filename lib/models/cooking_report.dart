@@ -62,23 +62,24 @@ class ListChild {
   String? createdAt;
   User? user;
   UserProfile? userProfile;
-  Null? reply;
+  // Null? reply;
 
-  ListChild(
-      {this.id,
-      this.recipeId,
-      this.imageUrl,
-      this.comment,
-      this.rate,
-      this.likesCount,
-      this.postedAt,
-      this.liked,
-      this.state,
-      this.updatedAt,
-      this.createdAt,
-      this.user,
-      this.userProfile,
-      this.reply});
+  ListChild({
+    this.id,
+    this.recipeId,
+    this.imageUrl,
+    this.comment,
+    this.rate,
+    this.likesCount,
+    this.postedAt,
+    this.liked,
+    this.state,
+    this.updatedAt,
+    this.createdAt,
+    this.user,
+    this.userProfile,
+    // this.reply
+  });
 
   ListChild.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -96,7 +97,7 @@ class ListChild {
     userProfile = json['user_profile'] != null
         ? UserProfile.fromJson(json['user_profile'])
         : null;
-    reply = json['reply'];
+    // reply = json['reply'];
   }
 
   Map<String, dynamic> toJson() {
@@ -118,7 +119,7 @@ class ListChild {
     if (userProfile != null) {
       data['user_profile'] = userProfile!.toJson();
     }
-    data['reply'] = reply;
+    // data['reply'] = reply;
     return data;
   }
 }

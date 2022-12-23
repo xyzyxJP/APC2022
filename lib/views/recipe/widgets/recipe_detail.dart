@@ -1,5 +1,6 @@
 import 'package:apc2022/models/recipe_detail.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
@@ -18,15 +19,20 @@ class RecipeDetailModal extends StatefulWidget {
 }
 
 class _RecipeDetailModalState extends State<RecipeDetailModal> {
-  late VideoPlayerController _controller;
+  late VideoPlayerController _videoPlayerController;
+  late ChewieController _chewieController;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network(widget.recipe.squareVideo!.url!)
-      ..initialize().then((_) {
-        setState(() {});
-      });
+    _videoPlayerController =
+        VideoPlayerController.network(widget.recipe.squareVideo!.url!)
+          ..initialize().then((_) => setState(() {}));
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController,
+      autoPlay: false,
+      looping: true,
+    );
   }
 
   @override
@@ -50,20 +56,22 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
               ),
             ),
           ),
-          const SizedBox(height: 8.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              SizedBox(
-                height: 200,
-                child: CachedNetworkImage(
-                  imageUrl: recipe.squareVideo!.posterUrl!,
-                  errorWidget: (context, url, dynamic error) =>
-                      const Icon(Icons.error),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                SizedBox(
+                  height: 200,
+                  child: CachedNetworkImage(
+                    imageUrl: recipe.squareVideo!.posterUrl!,
+                    errorWidget: (context, url, dynamic error) =>
+                        const Icon(Icons.error),
+                  ),
                 ),
-              ),
-              _buildNutrients(recipe),
-            ],
+                _buildNutrients(recipe),
+              ],
+            ),
           ),
           ListView.builder(
             padding: const EdgeInsets.only(top: 8.0),
@@ -81,27 +89,11 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
             ),
           ),
           Center(
-            child: _controller.value.isInitialized
+            child: _videoPlayerController.value.isInitialized
                 ? AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: VideoPlayer(_controller),
-                  )
-                : Container(),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  _controller.value.isPlaying
-                      ? _controller.pause()
-                      : _controller.play();
-                });
-              },
-              child: Icon(
-                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-              ),
-            ),
+                    aspectRatio: _videoPlayerController.value.aspectRatio,
+                    child: Chewie(controller: _chewieController))
+                : const CircularProgressIndicator(),
           ),
           const Padding(
             padding: EdgeInsets.all(8.0),
@@ -309,5 +301,12 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _videoPlayerController.dispose();
+    _chewieController.dispose();
+    super.dispose();
   }
 }
