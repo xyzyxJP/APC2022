@@ -62,11 +62,15 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 SizedBox(
-                  height: 200,
-                  child: CachedNetworkImage(
-                    imageUrl: recipe.squareVideo!.posterUrl!,
-                    errorWidget: (context, url, dynamic error) =>
-                        const Icon(Icons.error),
+                  height: 200.0,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: CachedNetworkImage(
+                      imageUrl: recipe.squareVideo!.posterUrl!,
+                      errorWidget: (context, url, dynamic error) =>
+                          const Icon(Icons.error),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 _buildNutrients(recipe),
