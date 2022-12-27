@@ -159,13 +159,7 @@ class _HomePageState extends State<HomePage> {
     if (!mounted) return;
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => SettingsPage(
-          categoryId: categoryId,
-          categoryName: categoryName,
-          recipeList: recipeList,
-        ),
-      ),
+      MaterialPageRoute(builder: (context) => const SettingsPage()),
     );
   }
 }
