@@ -59,12 +59,15 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final scrollController = ScrollController();
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: Scrollbar(
+        controller: scrollController,
         child: ListView.builder(
+            controller: scrollController,
             shrinkWrap: true,
             itemCount: categoryMapList.length,
             itemBuilder: (context, index) =>
