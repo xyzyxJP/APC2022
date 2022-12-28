@@ -78,8 +78,7 @@ class RecipeCard extends StatelessWidget {
                   MediaQuery.of(context).size.height,
               expand: false,
               builder: (context, scrollController) => RecipeDetailModal(
-                  recipe: recipe.content,
-                  scrollController: scrollController),
+                  recipe: recipe.content, scrollController: scrollController),
             ),
           );
         },
@@ -113,7 +112,8 @@ class RecipeCard extends StatelessWidget {
                     Row(
                       children: [
                         RatingBar.builder(
-                          initialRating: recipe.report.rateAverage ?? 0,
+                          initialRating:
+                              recipe.report.rateAverage?.toDouble() ?? 0,
                           minRating: 0,
                           direction: Axis.horizontal,
                           allowHalfRating: true,
