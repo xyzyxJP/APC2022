@@ -1,6 +1,8 @@
+import 'package:apc2022/provider/settings.dart';
 import 'package:apc2022/views/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,19 +17,31 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'APC2022',
-      theme: ThemeData(
-        useMaterial3: true,
-        fontFamily: 'Murecho',
-        brightness: Brightness.light,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<SettingsProvider>(
+          create: (context) => SettingsProvider(),
+        ),
+      ],
+      child: Consumer<SettingsProvider>(
+        builder: (context, settings, _) {
+          return MaterialApp(
+            title: 'APC2022',
+            theme: ThemeData(
+              useMaterial3: true,
+              fontFamily: 'Murecho',
+              brightness: Brightness.light,
+            ),
+            darkTheme: ThemeData(
+              useMaterial3: true,
+              fontFamily: 'Murecho',
+              brightness: Brightness.dark,
+            ),
+            themeMode: settings.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            home: const HomePage(title: 'APC2022 Home Page'),
+          );
+        },
       ),
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.dark,
-      ),
-      themeMode: ThemeMode.system,
-      home: const HomePage(title: 'APC2022 Home Page'),
     );
   }
 }
