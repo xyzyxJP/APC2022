@@ -16,32 +16,27 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: const Text('設定'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: ListView(
-          children: [
-            CheckboxListTile(
-              title: Row(
-                children: const [
-                  Icon(Icons.dark_mode_rounded),
-                  Padding(
-                    padding: EdgeInsets.only(left: 16.0),
-                    child: Text('ダークモードを有効にする'),
-                  ),
-                ],
-              ),
-              value: Provider.of<SettingsProvider>(context, listen: false)
-                  .isDarkMode,
-              onChanged: (bool? value) {
-                setState(() {
-                  Provider.of<SettingsProvider>(context, listen: false)
-                      .setDarkMode(value!);
-                });
-              },
-              controlAffinity: ListTileControlAffinity.platform,
-            )
-          ],
-        ),
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: [
+          CheckboxListTile(
+            title: const Text('ダークモードを有効にする'),
+            value: Provider.of<SettingsProvider>(context, listen: false)
+                .isDarkMode,
+            onChanged: (bool? value) {
+              setState(() {
+                Provider.of<SettingsProvider>(context, listen: false)
+                    .setDarkMode(value!);
+              });
+            },
+            controlAffinity: ListTileControlAffinity.platform,
+          ),
+          ListTile(
+            onTap: (() => showLicensePage(context: context)),
+            leading: const Icon(Icons.info_rounded),
+            title: const Text('ライセンス情報'),
+          ),
+        ],
       ),
     );
   }
