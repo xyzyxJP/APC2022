@@ -38,137 +38,135 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
   @override
   Widget build(BuildContext context) {
     final recipe = widget.recipe;
-    return Padding(
-      padding: const EdgeInsets.all(18.0),
-      child: ListView(
-        controller: widget.scrollController,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                recipe.title!,
-                style: GoogleFonts.yuseiMagic(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24.0,
-                ),
+    return ListView(
+      padding: const EdgeInsets.all(16.0),
+      controller: widget.scrollController,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Align(
+            alignment: Alignment.center,
+            child: Text(
+              recipe.title!,
+              style: GoogleFonts.yuseiMagic(
+                fontWeight: FontWeight.bold,
+                fontSize: 24.0,
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                SizedBox(
-                  height: 200.0,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: CachedNetworkImage(
-                      imageUrl: recipe.squareVideo!.posterUrl!,
-                      errorWidget: (context, url, dynamic error) =>
-                          const Icon(Icons.error),
-                      fit: BoxFit.cover,
-                    ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              SizedBox(
+                height: 200.0,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: CachedNetworkImage(
+                    imageUrl: recipe.squareVideo!.posterUrl!,
+                    errorWidget: (context, url, dynamic error) =>
+                        const Icon(Icons.error),
+                    fit: BoxFit.cover,
                   ),
                 ),
-                _buildNutrients(recipe),
-              ],
-            ),
+              ),
+              _buildNutrients(recipe),
+            ],
           ),
-          ListView.builder(
-            padding: const EdgeInsets.only(top: 8.0),
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: recipe.ingredientGroups!.length,
-            itemBuilder: (context, index) {
-              return _buildIngredientGroup(recipe.ingredientGroups![index]);
+        ),
+        ListView.builder(
+          padding: const EdgeInsets.only(top: 8.0),
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: recipe.ingredientGroups!.length,
+          itemBuilder: (context, index) {
+            return _buildIngredientGroup(recipe.ingredientGroups![index]);
+          },
+        ),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Divider(
+            thickness: 4.0,
+          ),
+        ),
+        Center(
+          child: _videoPlayerController.value.isInitialized
+              ? AspectRatio(
+                  aspectRatio: _videoPlayerController.value.aspectRatio,
+                  child: Chewie(controller: _chewieController))
+              : const CircularProgressIndicator(),
+        ),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Divider(
+            thickness: 4.0,
+          ),
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: recipe.recipeSteps!.length,
+          itemBuilder: (context, index) {
+            return _buildRecipeStep(recipe.recipeSteps![index]);
+          },
+        ),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Divider(
+            thickness: 4.0,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: ElevatedButton(
+            onPressed: () {
+              launchUrl(
+                  Uri.parse('https://delishkitchen.tv/recipes/${recipe.id}'),
+                  mode: LaunchMode.externalApplication);
             },
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Divider(
-              thickness: 4.0,
-            ),
-          ),
-          Center(
-            child: _videoPlayerController.value.isInitialized
-                ? AspectRatio(
-                    aspectRatio: _videoPlayerController.value.aspectRatio,
-                    child: Chewie(controller: _chewieController))
-                : const CircularProgressIndicator(),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Divider(
-              thickness: 4.0,
-            ),
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: recipe.recipeSteps!.length,
-            itemBuilder: (context, index) {
-              return _buildRecipeStep(recipe.recipeSteps![index]);
-            },
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Divider(
-              thickness: 4.0,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: ElevatedButton(
-              onPressed: () {
-                launchUrl(
-                    Uri.parse('https://delishkitchen.tv/recipes/${recipe.id}'),
-                    mode: LaunchMode.externalApplication);
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.open_in_browser),
-                    SizedBox(width: 8.0),
-                    Text(
-                      'ブラウザで開く',
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                  ],
-                ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(Icons.open_in_browser),
+                  SizedBox(width: 8.0),
+                  Text(
+                    'ブラウザで開く',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                ],
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: ElevatedButton(
-              onPressed: () {
-                Share.share(
-                  '${recipe.title!}\nhttps://delishkitchen.tv/recipes/${recipe.id}',
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.share),
-                    SizedBox(width: 8.0),
-                    Text(
-                      'リンクを共有',
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                  ],
-                ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: ElevatedButton(
+            onPressed: () {
+              Share.share(
+                '${recipe.title!}\nhttps://delishkitchen.tv/recipes/${recipe.id}',
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(Icons.share),
+                  SizedBox(width: 8.0),
+                  Text(
+                    'リンクを共有',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                ],
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
