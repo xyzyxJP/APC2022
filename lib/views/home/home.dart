@@ -2,6 +2,7 @@ import 'package:apc2022/api/api.dart';
 import 'package:apc2022/models/category.dart';
 import 'package:apc2022/models/recipe.dart';
 import 'package:apc2022/views/recipe/recipe_list.dart';
+import 'package:apc2022/views/settings/settings.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -63,6 +64,18 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsPage()),
+              ),
+              child: const Icon(Icons.settings_rounded),
+            ),
+          ),
+        ],
       ),
       body: Scrollbar(
         controller: scrollController,
