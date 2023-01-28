@@ -2,7 +2,6 @@ import 'package:apc2022/models/recipe_detail.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
@@ -48,10 +47,7 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
             alignment: Alignment.center,
             child: Text(
               recipe.title!,
-              style: GoogleFonts.yuseiMagic(
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0,
-              ),
+              style: const TextStyle(fontSize: 24.0),
             ),
           ),
         ),
@@ -188,7 +184,7 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
               const Icon(Icons.whatshot),
               Text(
                 recipe.nutrient!.items!.first.amount!,
-                style: GoogleFonts.yuseiMagic(fontSize: 16.0),
+                style: const TextStyle(fontSize: 16.0),
               ),
             ],
           ),
@@ -197,7 +193,7 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
               const Icon(Icons.currency_yen),
               Text(
                 recipe.cookingCost!.split(' ')[1],
-                style: GoogleFonts.yuseiMagic(fontSize: 16.0),
+                style: const TextStyle(fontSize: 16.0),
               ),
             ],
           ),
@@ -206,7 +202,7 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
               const Icon(Icons.timer),
               Text(
                 recipe.cookingTime!.split(' ')[1],
-                style: GoogleFonts.yuseiMagic(fontSize: 16.0),
+                style: const TextStyle(fontSize: 16.0),
               ),
             ],
           ),
@@ -230,7 +226,10 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
               alignment: Alignment.center,
               child: Text(
                 ingredientGroups!.name ?? '材料',
-                style: GoogleFonts.yuseiMagic(fontSize: 18.0),
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -244,10 +243,14 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(ingredientGroups.recipeIngredients![index].name!,
-                        style: GoogleFonts.yuseiMagic(fontSize: 18.0)),
-                    Text(ingredientGroups.recipeIngredients![index].servings1!,
-                        style: GoogleFonts.yuseiMagic(fontSize: 18.0)),
+                    Text(
+                      ingredientGroups.recipeIngredients![index].name!,
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
+                    Text(
+                      ingredientGroups.recipeIngredients![index].servings1!,
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
                   ],
                 ),
               );
@@ -283,7 +286,10 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
                     ),
                     Text(
                       recipeSteps!.step!.toString(),
-                      style: GoogleFonts.yuseiMagic(fontSize: 18.0),
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
@@ -295,7 +301,7 @@ class _RecipeDetailModalState extends State<RecipeDetailModal> {
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Text(
                 recipeSteps.description!,
-                style: GoogleFonts.yuseiMagic(fontSize: 18.0),
+                style: const TextStyle(fontSize: 16.0),
                 overflow: TextOverflow.clip,
               ),
             ),
